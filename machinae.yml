@@ -58,6 +58,53 @@ ipwhois:
             - key: emails
               split: "\n"
         pretty_name: Contacts
+ipstack:
+  name: ipstack
+  default: False
+  otypes:
+   - ipv4
+   - ipv6
+  json:
+    request:
+      url: 'http://api.ipstack.com/{target}'
+      method: get
+      params:
+#        access_key: ***YOUR_APIKEY_HERE***
+    results:
+    - key: continent_name
+      pretty_name: Continent
+    - key: country_name
+      pretty_name: Country
+    - key: region_name
+      pretty_name: Region
+    - key: city
+      pretty_name: City
+ipinfoio:
+    name: ipinfo.io
+    default: True
+    otypes:
+        - ipv4
+        - ipv6
+    json:
+        request:
+            url: https://ipinfo.io/{target}
+            headers:
+                Accept: application/json
+        results:
+            - key: hostname
+              pretty_name: ipinfo.io hostname
+            - key: city
+              pretty_name: ipinfo.io city
+            - key: region
+              pretty_name: ipinfo.io region
+            - key: country
+              pretty_name: ipinfo.io country
+            - key: loc
+              pretty_name: ipinfo.io geolocation
+            - key: org
+              pretty_name: ipinfo.io organization
+            - key: postal
+              pretty_name: ipinfo.io postal code
 spamhaus_ip:
   name: Spamhaus Zen BL
   default: False
@@ -96,7 +143,7 @@ ipvoid:
     request:
       url: 'https://endpoint.apivoid.com/iprep/v1/pay-as-you-go/'
       params:
-        key:
+#        key: ***YOUR_APIKEY_HERE***
         ip: '{target}'
       method: get
     results:
@@ -155,42 +202,6 @@ unshorten:
         values:
           - unshorten_url
         pretty_name: Unshortened URL
-malc0de:
-  name: Malc0de
-  otypes:
-    - ipv4
-    - fqdn
-    - hash
-  webscraper:
-    request:
-      url: 'https://malc0de.com/database/index.php?search={target}'
-      method: get
-    results:
-    - regex: '(\d{4}\-\d{1,2}\-\d{1,2})'
-      values:
-        - malc0de_date
-      pretty_name: "MC Date"
-    - regex: 'search=(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'
-      values:
-        - malc0de_ipaddr
-      pretty_name: MC IP
-    - regex: '(?!search=NA)search=([A-Z]{2})'
-      values:
-        - malc0de_country
-      pretty_name: MC Country
-    - regex: 'search=\d{4,5}..(\d{4,5})'
-      values:
-        - malc0de_asn
-      pretty_name: MC ASN
-    - regex: 'search=\d{4,5}..([A-Za-z]+)'
-      values:
-        - malc0de_asn_name
-      pretty_name: MC ASN Name
-    - regex: 'latest\-scan\/([A-Fa-f0-9]{32})'
-      values:
-        - malc0de_md5
-      pretty_name: MC MD5
-
 AbuseIPDB:
   name: AbuseIPDB
   otypes:
@@ -210,29 +221,6 @@ AbuseIPDB:
       values:
         - Last_seen
       pretty_name: 'Last seen'
-
-RansomwareTracker:
-  name: RansomwareTracker
-  otypes:
-    - ipv4
-  webscraper:
-    request:
-      url: 'https://ransomwaretracker.abuse.ch/host/{target}'
-      method: get
-    results:
-    - regex: '((?<=Host\sStatus:</th><td\scolspan="2"><span\sclass="buttonoffline">)\w+)'
-      values:
-        - Active
-      pretty_name: 'Host Status'
-    - regex: '((?<=</td><td>\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}</td><td>)\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2})'
-      values:
-        - Last_seen
-      pretty_name: 'Last seen'
-    - regex: '((?<=Malware:</th><td\scolspan="2">)\w+)'
-      values:
-        - ransomwareType
-      pretty_name: 'Ransomware Type'
-
 sans:
   name: SANS
   otypes:
@@ -273,7 +261,7 @@ telize:
       method: get
       headers:
         x-rapidapi-host: telize-v1.p.rapidapi.com
-        x-rapidapi-key:
+#        x-rapidapi-key: ***YOUR_APIKEY_HERE***
         Accept: application/json
     results:
     - key: continent_code
@@ -336,34 +324,6 @@ maxmind:
       pretty_name: MaxMind Longitude
     - key: location.time_zone
       pretty_name: MaxMind Timezone
-freegeoip:
-  name: freegeoip.io
-  default: true
-  otypes:
-    - ipv4
-#    - fqdn
-  json:
-    request:
-      url: https://freegeoip.io/json/{target}
-    results:
-    - key: country_code
-      pretty_name: GeoIP Country Code
-    - key: country_name
-      pretty_name: GeoIP Country
-#    - key: region_code
-#      pretty_name: GeoIP Region Code
-#    - key: region_name
-#      pretty_name: GeoIP Region
-    - key: city
-      pretty_name: GeoIP City
-#    - key: zip_code
-#      pretty_name: GeoIP Zip Code
-#    - key: latitude
-#      pretty_name: GeoIP Latitude
-#    - key: longitude
-#      pretty_name: GeoIP Longitude
-#    - key: time_zone
-#      pretty_name: GeoIP Timezone
 fortinet_classify:
   name: Fortinet Category
   default: True
@@ -382,6 +342,7 @@ fortinet_classify:
       pretty_name: Fortinet URL Category
 vt_ip:
   name: VirusTotal pDNS
+  default: False
   otypes:
     - ipv4
   json:
@@ -389,7 +350,7 @@ vt_ip:
       url: https://www.virustotal.com/vtapi/v2/ip-address/report
       params:
         ip: '{target}'
-        apikey: 308211ef74a1044ea98134424b3d20769451d25beda0b808a8b61036badc0ea1
+#        apikey: ***YOUR_APIKEY_HERE***
       method: get
     results:
     - key: resolutions
@@ -415,6 +376,7 @@ vt_ip:
       pretty_name: pDNS malicious URLs from VirusTotal
 # vt_ip:
 #   name: VirusTotal pDNS
+#   default: False
 #   otypes:
 #     - ip
 #   webscraper:
@@ -440,6 +402,7 @@ vt_ip:
 #       pretty_name: 'pDNS malicious URLs from VirusTotal'
 vt_domain:
   name: VirusTotal pDNS
+  default: False
   otypes:
     - fqdn
   json:
@@ -447,7 +410,7 @@ vt_domain:
       url: https://www.virustotal.com/vtapi/v2/domain/report
       params:
         domain: '{target}'
-        apikey: 308211ef74a1044ea98134424b3d20769451d25beda0b808a8b61036badc0ea1
+#        apikey: ***YOUR_APIKEY_HERE***
       method: get
     results:
     - key: resolutions
@@ -463,6 +426,7 @@ vt_domain:
       pretty_name: Webutation Safety score
 # vt_domain:
 #   name: VirusTotal pDNS
+#   default: False
 #   otypes:
 #     - fqdn
 #   webscraper:
@@ -488,6 +452,7 @@ vt_domain:
 #       pretty_name: 'pDNS malicious URLs from VirusTotal'
 vt_url:
   name: VirusTotal URL Report
+  default: False
   otypes:
     - url
   json:
@@ -495,7 +460,7 @@ vt_url:
       url: https://www.virustotal.com/vtapi/v2/url/report
       method: get
       params:
-        apikey: 308211ef74a1044ea98134424b3d20769451d25beda0b808a8b61036badc0ea1
+#        apikey: ***YOUR_APIKEY_HERE***
         resource: '{target}'
     results:
       - key: scan_date
@@ -511,8 +476,9 @@ vt_url:
             - '@'
             - result
           onlyif: detected
-vt_hash:
+vt_2_hash:
   name: VirusTotal File Report
+  default: False
   otypes:
     - hash
     - hash.sha1
@@ -522,7 +488,7 @@ vt_hash:
       url: https://www.virustotal.com/vtapi/v2/file/report
       method: get
       params:
-        apikey: 308211ef74a1044ea98134424b3d20769451d25beda0b808a8b61036badc0ea1
+#        apikey: ***YOUR_APIKEY_HERE***
         resource: '{target}'
     results:
       - key: scan_date
@@ -538,39 +504,49 @@ vt_hash:
             - '@'
             - result
           onlyif: detected
-reputation_authority:
-  name: Reputation Authority
-  otypes:
-    - fqdn
-    - ipv4
-  webscraper:
-    request:
-      url: 'http://www.reputationauthority.org/lookup.php?ip={target}'
-      method: get
-    results:
-      - regex: '>(\d{1,3}\/\d{1,3})'
-        values:
-          - ra_score
-        pretty_name: Reputation Authority Score
-threatexpert:
-  name: ThreatExpert
+vt_3_hash:
+  name: VirusTotal v3 File Report
+  default: False
   otypes:
     - hash
-  webscraper:
+    - hash.sha1
+    - 'hash.sha256'
+  json:
     request:
-      url: 'http://www.threatexpert.com/report.aspx?md5={target}'
+      url: https://www.virustotal.com/api/v3/files/{target}
       method: get
+      headers:
+#        x-apikey: ***YOUR_APIKEY_HERE***
     results:
-      - regex: 'Submission\sreceived.\s(.+)</li>'
-        values:
-          - threatexpert_date
-        pretty_name: Hash found at ThreatExpert
-      - regex: '1">(.{5,100})</td.{10,35}src\='
-        values:
-          - threatexpert_indicators
-        pretty_name: Malicious Indicators from ThreatExpert
+      - key: data.attributes.last_analysis_stats.malicious
+        pretty_name: Malicious Detections
+      - key: data.attributes.last_analysis_stats.undetected
+        pretty_name: Clean Detections
+      - key: data.attributes.last_analysis_results
+        pretty_name: Vendor Detection
+        multi_match:
+          keys:
+            - '@'
+            - result
+          onlyif: result
+      - key: data.attributes.crowdsourced_ids_results
+        pretty_name: IDS Detection
+        multi_match:
+          keys:
+            - rule_msg
+      - key: data.attributes.sigma_analysis_results
+        pretty_name: Sigma Detection
+        multi_match:
+          keys:
+            - rule_title
+      - key: data.attributes.crowdsourced_yara_results
+        pretty_name: YARA Detection
+        multi_match:
+          keys:
+            - rule_name
 vxvault:
   name: VxVault
+  default: True
   otypes:
     - hash
   webscraper:
@@ -693,52 +669,6 @@ projecthoneypot:
         values:
           - php_harvester_results
         pretty_name: ProjectHoneyPot harvester results
-mcafee_threat_domain:
-  name: McAfee Threat
-  otypes:
-    - fqdn
-  webscraper:
-    request:
-      url: 'https://www.mcafee.com/threat-intelligence/domain/default.aspx?domain={target}'
-      method: get
-    results:
-      - regex: 'ctl00_breadcrumbContent_imgRisk"[^\r\n]+title="([A-Za-z]+)"'
-        values:
-          - mcafee_risk
-        pretty_name: McAfee Web Risk
-      - regex: '<li>[\n\s]*Web\sCategory:[\n\s]*([A-Z][A-Za-z\s/,]+?)[\n\s]*</li>'
-        values:
-          - mcafee_category
-        pretty_name: McAfee Web Category
-      - regex: '<li>[\n\s]*Last\sSeen:[\n\s]*([0-9\-]+)[\n\s]*</li>'
-        values:
-          - mcafee_last_seen
-        pretty_name: McAfee Last Seen
-mcafee_threat_ip:
-  name: McAfee Threat
-  otypes:
-    - ipv4
-  webscraper:
-    request:
-      url: 'https://www.mcafee.com/threat-intelligence/ip/default.aspx?ip={target}'
-      method: get
-    results:
-      - regex: 'ctl00_breadcrumbContent_imgRisk"[^\r\n]+src="/img/Threat_IP/rep_([a-z]+)\.png"'
-        values:
-          - mcafee_risk
-        pretty_name: McAfee Web Risk
-      - regex: 'ctl00_breadcrumbContent_imgRisk1"[^\r\n]+src="/img/Threat_IP/rep_([a-z]+)\.png"'
-        values:
-          - mcafee_risk
-        pretty_name: McAfee Email Risk
-      - regex: 'ctl00_breadcrumbContent_imgRisk2"[^\r\n]+src="/img/Threat_IP/rep_([a-z]+)\.png"'
-        values:
-          - mcafee_risk
-        pretty_name: McAfee Network Risk
-      - regex: '<li>[\n\s]*Web\sCategory:[\n\s]*([A-Z][A-Za-z\s/,]+?)[\n\s]*</li>'
-        values:
-          - mcafee_category
-        pretty_name: McAfee Web Category
 stopforumspam:
   name: StopForumSpam
   otypes:
@@ -754,22 +684,19 @@ stopforumspam:
         pretty_name: Spam email count
 cymru_mhr:
   name: Cymru MHR
+  default: False
   otypes:
     - hash
     - hash.sha1
-  webscraper:
+  json:
     request:
-      url: 'https://hash.cymru.com/cgi-bin/bulkmhr.cgi'
-      method: post
-      data:
-        action: do_whois
-        bulk_paste: '{target}'
-        submit_paste: Submit
+      url: 'http://hash.cymru.com/v2/{target}'
+      method: get
+      auth: cymru
     results:
-      - regex: '[a-f0-9]+\s(\d+)\s(\d+)'
-        values:
-          - cymru_mhr_detect_time
-          - cymru_mhr_detect_pct
+      - key: last_run_date
+        pretty_name: Date
+      - key: antivirus_detection_rate
         pretty_name: Cymru MHR Detection Percent
 icsi_notary:
   name: ICSI Certificate Notary
@@ -787,21 +714,6 @@ icsi_notary:
           - icsi_times_seen
           - icsi_validated
         pretty_name: ICSI Notary Results
-totalhash_ip:
-  name: TotalHash
-  default: false
-  otypes:
-    - ip
-  webscraper:
-    request:
-      url: 'https://totalhash.com/network/dnsrr:*{target}*%20or%20ip:{target}'
-      method: get
-    results:
-      - regex: '/analysis/(\w{40}).+(\d{4}\-\d{1,2}\-\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,2})'
-        values:
-          - thip_hash
-          - thip_date
-        pretty_name: Totalhash
 domaintools_parsed_whois:
   name: DomainTools Whois
   default: false
@@ -812,8 +724,8 @@ domaintools_parsed_whois:
       url: 'https://api.domaintools.com/v1/{target}/whois/parsed'
       method: get
       params:
-        api_username:
-        api_key:
+#        api_username: ***YOUR_APIUSERNAME_HERE***
+#        api_key: ***YOUR_APIKEY_HERE***
     results:
       - key: response.parsed_whois.contacts
         multi_match:
@@ -846,7 +758,7 @@ domaintools_parsed_whois:
             - url
 domaintools_reverse_whois:
   name: DomainTools Reverse Whois
-  default: false
+  default: False
   otypes:
     - email
   json:
@@ -856,8 +768,8 @@ domaintools_reverse_whois:
       params:
         terms: '{target}'
         mode: purchase
-        api_username:
-        api_key:
+#        api_username: ***YOUR_APIUSERNAME_HERE***
+#        api_key: ***YOUR_APIKEY_HERE***
     results:
       - key: response.domains
         match_all: true
@@ -868,7 +780,7 @@ domaintools_reverse_whois:
         pretty_name: All registered domains
 domaintools_reputation:
   name: DomainTools Reputation
-  default: false
+  default: False
   otypes:
   - fqdn
   json:
@@ -878,8 +790,8 @@ domaintools_reputation:
       params:
         domain: '{target}'
         include_reasons: 'true'
-        api_username:
-        api_key:
+#        api_username: ***YOUR_APIUSERNAME_HERE***
+#        api_key: ***YOUR_APIKEY_HERE***
     results:
     - key: response.risk_score
       pretty_name: Risk Score
@@ -898,7 +810,7 @@ dnsdb_ip:
       method: get
       headers:
         Accept: application/json
-        X-Api-Key:
+#        X-Api-Key: ***YOUR_APIKEY_HERE***
     results:
     - key: '@'
       multi_match:
@@ -933,7 +845,7 @@ dnsdb_fqdn:
           format: as_epoch
       headers:
         Accept: application/json
-        X-Api-Key:
+#        X-Api-Key: ***YOUR_APIKEY_HERE***
     results:
     - key: '@'
       multi_match:
@@ -952,7 +864,7 @@ dnsdb_fqdn:
           regex: "^(A|AAAA|MX|SPF|TXT)$"
 cif:
   name: Collective Intelligence Framework
-  default: false
+  default: False
   otypes:
   - ipv4
   - fqdn
@@ -974,7 +886,7 @@ cif:
           timezone: UTC
       headers:
         Accept: application/vnd.cif.v2+json
-        Authorization: Token token=
+#        Authorization: Token token= ***YOUR_TOKEN_HERE***
       verify_ssl: False
     results:
     - key: '@'
@@ -1001,10 +913,9 @@ cif:
           - Tags
           - Provider
           - Description
-
 threatcrowd_ip_report:
   name: ThreatCrowd IP Report
-  default: True
+  default: False
   otypes:
   - ipv4
   json:
@@ -1030,7 +941,6 @@ threatcrowd_ip_report:
     - key: 'hashes'
       pretty_name: Known Malware Hash
       match_all: true
-
 passivetotal_pdns:
   name: PassiveTotal Passive DNS
   default: False
@@ -1057,7 +967,6 @@ passivetotal_pdns:
             - key: resolve
       - key: queryValue
         pretty_name: Query Value
-
 passivetotal_whois:
   name: PassiveTotal Whois
   default: False
@@ -1103,7 +1012,6 @@ passivetotal_whois:
         pretty_name: Tech
       - key: registrant
         pretty_name: Registrant
-
 passivetotal_sslcert:
   name: PassiveTotal SSL Certificate History
   default: False
@@ -1133,7 +1041,6 @@ passivetotal_sslcert:
             - key: lastSeen
               pretty_name: Last Seen
         pretty_name: Results
-
 passivetotal_components:
   name: PassiveTotal Components
   default: False
@@ -1165,7 +1072,6 @@ passivetotal_components:
           - key: label
             pretty_name: Label
         pretty_name: Results
-
 passivetotal_trackers:
   name: PassiveTotal Trackers
   default: False
@@ -1230,7 +1136,7 @@ shodan:
     request:
       url: https://api.shodan.io/shodan/host/{target}
       params:
-        key:
+#        key: ***YOUR_APIKEY_HERE***
     results:
     - key: '@'
       multi_match:
@@ -1273,32 +1179,6 @@ shodan:
           - ssl.cert.fingerprint.sha256
         onlyif: ssl.cert.fingerprint.sha256
       pretty_name: Shodan SSL Certs
-ipinfoio:
-    name: ipinfo.io
-    default: False
-    otypes:
-        - ipv4
-        - ipv6
-    json:
-        request:
-            url: https://ipinfo.io/{target}
-            headers:
-                Accept: application/json
-        results:
-            - key: hostname
-              pretty_name: ipinfo.io hostname
-            - key: city
-              pretty_name: ipinfo.io city
-            - key: region
-              pretty_name: ipinfo.io region
-            - key: country
-              pretty_name: ipinfo.io country
-            - key: loc
-              pretty_name: ipinfo.io geolocation
-            - key: org
-              pretty_name: ipinfo.io organization
-            - key: postal
-              pretty_name: ipinfo.io postal code
 xforce-malware:
     name: IBM XForce Malware Report
     default: False
@@ -1340,10 +1220,12 @@ metadefender_hash:
     - hash.sha256
   json:
     request:
-      url: https://api.metadefender.com/v2/hash/{target}
+      url: https://api.metadefender.com/v4/hash/{target}
       method: get
-      headers:
-        apikey:
+      headers: 
+#        apikey: ***YOUR_APIKEY_HERE***
+      ignored_status_codes:
+       - 404
     results:
       - key: scan_results.start_time
         pretty_name: Date submitted
@@ -1415,7 +1297,7 @@ greynoise_ent:
     request:
       url: https://enterprise.api.greynoise.io/v2/noise/context/{target}
       headers:
-        key: ***YOUR_APIKEY_HERE***
+      #   key: ***YOUR_APIKEY_HERE***
       ignored_status_codes:
         - 404
     results:
@@ -1453,3 +1335,381 @@ macvendors:
         values:
           - vendor
         pretty_name: Mac Address Vendor
+pulsedive:
+  name: PulseDive
+  default: True
+  otypes:
+   - ipv4
+   - fqdn
+   - url 
+  json:
+    request:
+      url: 'https://pulsedive.com/api/info.php'
+      method: get
+      params:
+        indicator: '{target}'
+        pretty: '1'
+        splitrisk: '1'
+        summary: '1'
+      ignored_status_codes:
+        - 404
+    results:
+    - key: 'risk'
+      pretty_name: Risk Score
+    - key: 'riskfactors'
+      pretty_name: Description
+      multi_match:
+        keys:
+          - key: 'description'
+emailrep:
+  name: Simple Email Reputation
+  default: True
+  otypes:
+   - email
+  json:
+    request:
+      url: 'https://emailrep.io/{target}'
+      method: get
+      headers:
+#        Key: ***YOUR_APIKEY_HERE***
+      params:
+        summary: 'true'
+    results:
+    - key: summary
+      pretty_name: Summary
+    - key: reputation
+      pretty_name: Reputation 
+    - key: details.blacklisted
+      pretty_name: Blacklisted
+    - key: details.malicious_activity
+      pretty_name: Malicious Activity
+    - key: details.data_breach
+      pretty_name: Data Breach
+    - key: details.new_domain
+      pretty_name: New Domain
+    - key: details.spam
+      pretty_name: Spam
+    - key: details.spoofable
+      pretty_name: Spoofable
+    - key: details.dmarc_enforced
+      pretty_name: DMARC
+hunter:
+  name: HunterIO
+  default: False
+  otypes:
+   - email
+  json:
+    request:
+      url: 'https://api.hunter.io/v2/email-verifier'
+      method: get
+      params:
+        email: '{target}'
+#        api_key: ***YOUR_APIKEY_HERE***
+    results:
+    - key: 'data.block'
+      pretty_name: Block
+    - key: 'data.score'
+      pretty_name: Reputation Score
+    - key: 'data.status'
+      pretty_name: Status
+    - key: 'data.gibberish'
+      pretty_name: Gibberish
+    - key: 'data.webmail'
+      pretty_name: Webmail
+alienvault_domain:
+  name: AlienVault OTX
+  default: False
+  otypes:
+   - fqdn
+  json:
+    request:
+      url: 'https://otx.alienvault.com/api/v1/indicators/domain/{target}/general'
+      method: get
+#      headers:
+#        X-OTX-API-KEY: ***YOUR_APIKEY_HERE***
+      ignored_status_codes:
+        - 408
+        - 504
+    results:
+    - key: pulse_info.count
+      pretty_name: Pulse Count
+    - key: 'pulse_info.pulses'
+      pretty_name: Pulse
+      multi_match:
+        keys:
+          - key: 'name'
+alienvault_ipv4:
+  name: AlienVault OTX
+  default: False
+  otypes:
+   - ipv4
+  json:
+    request:
+      url: 'https://otx.alienvault.com/api/v1/indicators/IPv4/{target}/reputation'
+      method: get
+#      headers:
+#        X-OTX-API-KEY: ***YOUR_APIKEY_HERE***
+      ignored_status_codes:
+        - 408
+        - 504
+    results:
+    - key: pulse_info.count
+      pretty_name: Pulse Count
+    - key: 'pulse_info.pulses'
+      pretty_name: Pulse
+      multi_match:
+        keys:
+          - key: 'name'
+alienvault_ipv6:
+  name: AlienVault OTX
+  default: False
+  otypes:
+   - ipv6
+  json:
+    request:
+      url: 'https://otx.alienvault.com/api/v1/indicators/IPv6/{target}/reputation'
+      method: get
+      headers:
+#        X-OTX-API-KEY: ***YOUR_APIKEY_HERE***
+      ignored_status_codes:
+        - 408
+        - 504
+    results:
+    - key: pulse_info.count
+      pretty_name: Pulse Count
+    - key: 'pulse_info.pulses'
+      pretty_name: Pulse
+      multi_match:
+        keys:
+          - key: 'name'
+alienvault_url:
+  name: AlienVault OTX
+  default: False
+  otypes:
+   - url 
+  json:
+    request:
+      url: 'https://otx.alienvault.com/api/v1/indicators/url/{target}/general'
+      method: get
+      headers:
+#        X-OTX-API-KEY: ***YOUR_APIKEY_HERE***
+      ignored_status_codes:
+         - 408
+         - 504
+    results:
+    - key: pulse_info.count
+      pretty_name: Pulse Count
+    - key: 'pulse_info.pulses'
+      pretty_name: Pulse
+      multi_match:
+        keys:
+          - key: 'name'
+maltiverse_hash:
+  name: Maltiverse
+  default: True
+  otypes:
+   - hash.sha256
+  json:
+    request:
+      url: 'https://api.maltiverse.com/sample/{target}'
+      method: get
+      headers:
+#        Authorization: 'Bearer ***YOUR_APIKEY_HERE***'
+      ignored_status_codes:
+         - 404
+    results:
+    - key: classification
+      pretty_name: Result
+    - key: 'tag'
+      pretty_name: 'Tag'
+      format: as_list
+maltiverse_ipv4:
+  name: Maltiverse
+  default: True
+  otypes:
+   - ipv4
+  json:
+    request:
+      url: 'https://api.maltiverse.com/ip/{target}'
+      method: get
+      headers:
+#        Authorization: 'Bearer ***YOUR_APIKEY_HERE***'
+      ignored_status_codes:
+         - 404
+    results:
+    - key: classification
+      pretty_name: Result
+    - key: blacklist
+      pretty_name: Description
+      multi_match:
+        keys:
+          - key: description
+malware_bazaar:
+  name: Malware Bazaar
+  default: True
+  otypes:
+   - hash
+   - hash.sha1
+   - hash.sha256 
+  json:
+    request:
+      url: 'https://mb-api.abuse.ch/api/v1/'
+      method: post
+      data:
+        query: 'get_info'
+        hash: '{target}'
+    results:
+#    - key: query_status
+    - key: 'data'
+      pretty_name: Signature
+      multi_match:
+        keys:
+          - key: 'signature'
+### issue with nested JSON arrays
+#      multi_match: 
+#        keys:
+#          - key: 'yara_rules'
+#            format: as_list
+#            multi_match:
+#              keys:
+#                - key: 'rule_name'
+### Issue posting a JSON body
+#yaraify:
+#  name: YARAify
+#  default: True
+#  otypes:
+#   - hash 
+#  json:
+#    request:
+#      url: 'https://yaraify-api.abuse.ch/api/v1/'
+#      method: post
+#      json:
+#        query: 'lookup_hash'
+#        search_term: '{target}'
+#   results:
+#   - key: query_status
+#      pretty_name: 'Query Status'
+#    - key: 'data.tasks.unpacker_results.unpacked_yara_matches'
+#      multi_match:
+#       keys:
+#         - key: rule_name
+#            pretty_name: 'YARA Rule'
+###URL must be base64 encoded
+#phishtank:  
+#  name: PhishTank
+#  default: True
+#  otypes:
+#   - url 
+#  json:
+#    request:
+#      url: 'http://checkurl.phishtank.com/checkurl/{target}'
+#      method: post
+#      headers:
+#        User-Agent: 'phishtank/ Machinae'
+#      params:
+#        url: '{target}'
+#        format: 'json'
+#        app_key: ***YOUR_APIKEY_HERE***
+#      ignored_status_codes:
+#         - 404
+#    results:
+#    - key: in_database
+#      pretty_name: In Database
+focsec:
+  name: Focsec
+  default: False
+  otypes:
+   - ipv4
+   - ipv6
+  json:
+    request:
+      url: 'https://api.focsec.com/v1/ip/{target}'
+      method: get
+      params:
+#        api_key: ***YOUR_APIKEY_HERE**
+    results:
+    - key: is_proxy
+      pretty_name: Proxy
+    - key: is_vpn
+      pretty_name: VPN
+    - key: is_tor
+      pretty_name: Tor
+    - key: is_bot
+      pretty_name: Bot
+    - key: is_datacenter
+      pretty_name: Datacenter
+haveibeenpwned:
+  name: Have I Been Pwned
+  default: False
+  otypes:
+   - email
+  json:
+    request:
+      url: 'https://haveibeenpwned.com/api/v3/breachedaccount/{target}'
+      method: get
+      headers:
+#        hibp-api-key: ***YOUR_APIKEY_HERE***
+      params:
+        truncateResponse: 'false'
+      target:
+        urlencode: true
+      ignored_status_codes:
+         - 404
+    results:
+    - key: '@'
+      pretty_name: Breach
+      multi_match:
+        keys:
+          - Title
+          - Domain
+          - BreachDate
+          - DataClasses
+cybercrime_tracker:
+  name: Cybercrime Tracker
+  default: True
+  otypes:
+   - ipv4
+   - fqdn
+  webscraper:
+    request:
+      url: 'https://cybercrime-tracker.net/index.php?search={target}'
+      method: get
+    results:
+      - regex: '<td>(\d{1,2}\-\d{1,2}\-\d{1,4})<\/td>\n\s*<td>(.+?\..+?)<\/td>\n\s*<td><a.+?\..+?>(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})<\/a><\/td>\n\s*<td>(.+?)<\/td>'
+        values: date, url, ip, family
+        pretty_name: Results
+
+#example_name:
+#  name: Example Name
+#  default: False
+#  otypes:
+#   - ipv4
+#   - ipv6
+#   - fqdn
+#   - email
+#   - sslfp
+#   - hash 
+#   - url 
+#   - mac
+#  json:
+#    request:
+#      url: 'https://example/v1/reputation/'
+#      method: get
+#      headers:
+#        Authorization: ***YOUR_APIKEY_HERE***
+#      params:
+#        example_indicator: '{target}'
+#      target:
+#        urlencode: true
+#      ignored_status_codes:
+#         - 404
+#    results:
+#    - key: example_risk_score
+#      pretty_name: Example Risk Score
+#      format: as_list
+#    - key: 'example_facors'
+#      multi_match:
+#        keys:
+#          - example_description
+#          - example_summary
+#        onlyif: true_field          
