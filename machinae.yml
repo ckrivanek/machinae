@@ -204,52 +204,69 @@ unshorten:
         pretty_name: Unshortened URL
 AbuseIPDB:
   name: AbuseIPDB
+  default: true
   otypes:
     - ipv4
+    - ipv6
   webscraper:
     request:
       url: 'https://abuseipdb.com/check/{target}'
       method: get
     results:
-
     - regex: '((?<=This\sIP\swas\sreported\s<b>)\d{1,3})'
       values:
         - AbuseIPReports
       pretty_name: 'AbuseIPDB reports'
-
     - regex: '((?<=most\srecent\sreport\swas\s<b>)\d{1,3}\s\w+\s\w+)'
       values:
         - Last_seen
       pretty_name: 'Last seen'
-sans:
-  name: SANS
+AbuseIPDB_api:
+  name: AbuseIPDB API
+  default: false
   otypes:
     - ipv4
-  webscraper:
+    - ipv6
+  json:
     request:
-      url: 'https://isc.sans.edu/api/ip/{target}'
+      url: 'https://api.abuseipdb.com/api/v2/check/'
       method: get
+      headers:
+#        Key: ***YOUR_APIKEY_HERE***
+        Accept: 'application/json'
+      params: 
+        ipAddress: '{target}'
     results:
-    - regex: 'attacks>(\d+)<'
-      values:
-        - sans_attacks
-      pretty_name: SANS attacks
-    - regex: 'count>(\d+)<'
-      values:
-        - sans_count
-      pretty_name: SANS count
-    - regex: 'count>(\d+)<'
-      values:
-        - sans_count
-      pretty_name: SANS count
-    - regex: 'maxdate>(\d{4}-\d{2}-\d{2})<'
-      values:
-        - sans_maxdate
-      pretty_name: SANS maxdate
-    - regex: 'mindate>(\d{4}-\d{2}-\d{2})<'
-      values:
-        - sans_mindate
-      pretty_name: SANS mindate
+    - key: data.isWhitelisted
+      pretty_name: Whitelisted
+    - key: data.abuseConfidenceScore
+      pretty_name: Confidence Score
+    - key: data.usageType
+      pretty_name: Usage Type
+    - key: data.totalReports
+      pretty_name: Total Reports
+    - key: data.lastReported
+      pretty_name: Last Reported
+sans:
+  name: SANS Internet Storm Center / DShield API
+  default: True
+  otypes:
+   - ipv4
+  json:
+    request:
+      url: 'http://isc.sans.edu/api/ip/{target}?json'
+      method: get
+      headers:
+#        User-Agent: ***YOUR_EMAIL_HERE***
+    results:
+    - key: ip.count
+      pretty_name: Packet Count
+    - key: ip.attacks
+      pretty_name: Attack Count
+    - key: ip.mindate
+      pretty_name: Minimum Date
+    - key: ip.maxdate
+      pretty_name: Maximum Date
 telize:
   name: Telize GeoIP
   default: False
@@ -521,7 +538,7 @@ vt_3_hash:
       - key: data.attributes.last_analysis_stats.malicious
         pretty_name: Malicious Detections
       - key: data.attributes.last_analysis_stats.undetected
-        pretty_name: Clean Detections
+        pretty_name: Undetected
       - key: data.attributes.last_analysis_results
         pretty_name: Vendor Detection
         multi_match:
